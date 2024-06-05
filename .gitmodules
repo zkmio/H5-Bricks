@@ -1,0 +1,3 @@
+[submodule "lib/mgrui"]
+	path = lib/mgrui
+	url = https://github.com/Luncert/MgrUI
