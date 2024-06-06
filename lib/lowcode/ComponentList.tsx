@@ -13,7 +13,7 @@ export default function ComponentList() {
   )
 }
 
-export function ComponentCell(props: {
+function ComponentCell(props: {
   entry: PageDesignComponent;
 }) {
   const core = usePageDesign()

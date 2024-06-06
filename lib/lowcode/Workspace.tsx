@@ -5,7 +5,6 @@ import { FiMoreHorizontal } from 'solid-icons/fi';
 import { onCleanup, onMount } from "solid-js";
 import WorkspaceCanvas from "./Canvas";
 import { names } from "../mgrui/lib/components/utils";
-import { DragArea } from "./DragLayer";
 
 export default function Workspace() {
   const theme = useTheme();

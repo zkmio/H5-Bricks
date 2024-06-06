@@ -2,7 +2,7 @@ import { useTheme } from "@suid/material";
 import { For } from "solid-js";
 import CanvasController from "./CanvasController";
 import ComponentRender from "./ComponentRender";
-import { DragArea } from "./DragLayer";
+import Draggable from "./Draggable";
 
 export default function Canvas() {
   const theme = useTheme();
@@ -21,12 +21,12 @@ export default function Canvas() {
         "background-size": "20px 20px",
         "background-position": `${x.config().paddingX - 10}px ${x.config().paddingY - 10}px`
       }}>
-      <DragArea>
+      <Draggable.Area>
         <For each={Array.from(x.components())}>{([id, instance]) => (
             <ComponentRender instance={instance}
               canvasPadding={[x.config().paddingX, x.config().paddingY]} />
           )}</For>
-      </DragArea>
+      </Draggable.Area>
     </div>
   )
 }

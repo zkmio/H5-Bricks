@@ -1,19 +1,29 @@
 import { JSX } from "solid-js/jsx-runtime"
 import { usePageDesign } from "./PageDesign"
 import Events from "./Events"
-import { Show, batch } from "solid-js";
-import { bucket } from "../mgrui/lib/components/utils";
+import { Show, batch, createContext } from "solid-js";
+import { bucket, useCtx } from "../mgrui/lib/components/utils";
 import ComponentRender from "./ComponentRender";
 import { createDomEventRegistry } from "../mgrui/lib/components/event/EventRegistry";
 
-export default function DragLayer() {
+interface IDraggableContext {
+  selectedComponent: NullableBucket<ComponentInstance>
+}
+
+const DraggableContext = createContext<IDraggableContext>()
+
+export function useDraggable() {
+  return useCtx<IDraggableContext>(DraggableContext as any)
+}
+
+export function Container(props: JSX.HTMLAttributes<HTMLDivElement>) {
   let container: HTMLDivElement
 
   const core = usePageDesign()
   const domEventRegistry = createDomEventRegistry()
 
-  const selectedComponent = bucket<ComponentInstance>(null)
-  const mousePosition = bucket<Pos>(null)
+  const selectedComponent = bucket<ComponentInstance, null>()
+  const mousePosition = bucket<Pos, null>()
   const dragging = bucket(false)
 
   core.on(Events.StartDraggingComponent, evt => {
@@ -46,22 +56,27 @@ export default function DragLayer() {
   })
   
   return (
-    <div id="drag-layer" class="absolute w-full h-full pointer-events-none"
-      ref={el => container = el}>
-      <Show when={dragging()}>
-        <div class="relative" style={{
-          left: mousePosition()[0] + "px",
-          top: mousePosition()[1] + "px"
-        }}>
-          <div class="-translate-y-full">{selectedComponent().label}</div>
-          <ComponentRender instance={selectedComponent()} />
+    <div {...props}>
+      <DraggableContext.Provider value={{ selectedComponent }}>
+        {props.children}
+        <div id="drag-layer" class="absolute w-full h-full pointer-events-none"
+          ref={el => container = el}>
+          <Show when={dragging()}>
+            <div class="relative" style={{
+              left: mousePosition()?.[0] + "px",
+              top: mousePosition()?.[1] + "px"
+            }}>
+              <div class="-translate-y-full">{selectedComponent()?.label}</div>
+              <ComponentRender instance={selectedComponent.get()} />
+            </div>
+          </Show>
         </div>
-      </Show>
+      </DraggableContext.Provider>
     </div>
   )
 }
 
-export function DragArea(props: {
+export function Area(props: {
   children: JSX.Element
 }) {
   const onMouseEnter = () => {
@@ -79,3 +94,8 @@ export function DragArea(props: {
     </div>
   )
 }
+
+export default ({
+  Container,
+  Area
+})

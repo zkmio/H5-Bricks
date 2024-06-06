@@ -5,7 +5,7 @@ import Workspace from "./Workspace";
 import Events from "./Events";
 import { CustomEventRegistryImpl } from "../mgrui/lib/components/event/EventRegistry";
 import { bucket, useCtx } from "../mgrui/lib/components/utils";
-import DragLayer from "./DragLayer";
+import Draggable from "./Draggable";
 
 interface PageDesignContextDef extends CustomEventRegistry {
 }
@@ -38,13 +38,12 @@ export default function PageDesign() {
 
 
   return (
-    <div class="flex relative w-full h-full">
-      <PageDesignContext.Provider value={ctx}>
+    <PageDesignContext.Provider value={ctx}>
+      <Draggable.Container class="flex relative w-full h-full">
         <ComponentList />
         <Workspace />
         <CanvasConfiguration />
-        <DragLayer />
-      </PageDesignContext.Provider>
-    </div>
+      </Draggable.Container>
+    </PageDesignContext.Provider>
   )
 }
