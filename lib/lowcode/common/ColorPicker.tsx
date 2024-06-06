@@ -1,15 +1,19 @@
 import { createEffect, onMount } from "solid-js"
 import { bucket } from "../../mgrui/lib/components/utils"
-import { DomEventRegistry, createDomEventRegistry } from "../../mgrui/lib/components/event/EventRegistry"
+import { createDomEventRegistry } from "../../mgrui/lib/components/event/EventRegistry"
 
-export default function ColorPicker() {
+export default function ColorPicker(props: {
+  onChange: Consumer<string>
+}) {
   let container: HTMLDivElement
   let panelCanvasRef: HTMLCanvasElement
   let barCanvasRef: HTMLCanvasElement
 
   const isLightColor = bucket(false)
   const selectedBarColor = bucket<string>("")
-  const selected = bucket<string>("")
+  const selectedPanelColor = bucket<string>("", {
+    afterUpdate: v => props.onChange(v)
+  })
   const panelCursor = bucket<Pos>([0, 0])
   const draggingPanel = bucket(false)
   const barCursor = bucket<Pos>([0, 0])
@@ -22,12 +26,12 @@ export default function ColorPicker() {
     }
 
     let [x, y] = pos
-    x = Math.min(ctx.canvas.width, Math.max(x, 0))
-    y = Math.min(ctx.canvas.height, Math.max(y, 0))
+    x = Math.min(ctx.canvas.width - 1, Math.max(x, 0))
+    y = Math.min(ctx.canvas.height - 1, Math.max(y, 0))
 
     const pixel = ctx.getImageData(x, y, 1, 1).data
     const rgb = `rgb(${pixel[0]},${pixel[1]},${pixel[2]})`
-    selected(rgb)
+    selectedPanelColor(rgb)
     panelCursor([x, y])
     isLightColor(x < 100 && y < 100)
   }
@@ -40,9 +44,9 @@ export default function ColorPicker() {
 
     let [x, y] = pos
     x = Math.min(ctx.canvas.width, Math.max(x, 0))
-    y = Math.min(ctx.canvas.height, Math.max(y, 0))
+    y = Math.min(ctx.canvas.height - 1, Math.max(y, 0))
 
-    const pixel = ctx.getImageData(x, y, 1, 1).data
+    const pixel = ctx.getImageData(0, y, 1, 1).data
     const rgb = `rgb(${pixel[0]},${pixel[1]},${pixel[2]})`
     selectedBarColor(rgb)
     barCursor([x, y])
@@ -149,21 +153,23 @@ export default function ColorPicker() {
 
   return (
     <div ref={el => container = el} class="box-border flex gap-2 p-2">
-      <div class="relative flex flex-col gap-2">
-        <canvas width={300} height={300}
-          ref={el => panelCanvasRef = el}
-          onMouseDown={onMouseDownPanel} />
+      <div class="flex flex-col gap-2">
+        <div class="relative"
+          onMouseDown={onMouseDownPanel}>
+          <canvas width={300} height={300}
+            ref={el => panelCanvasRef = el} />
+          <div class="absolute w-2 h-2 rounded-xl outline outline-[2px] outline-white border-zinc-500 border-[1px]
+            -translate-x-1/2 -translate-y-1/2" style={{
+            left: panelCursor()[0] + 'px',
+            top: panelCursor()[1] + 'px'
+          }}></div>
+        </div>
         <div class="w-full h-full text-center p-1" style={{
           color: isLightColor() ? "black" : "white",
-          "background-color": selected()
+          "background-color": selectedPanelColor()
         }}>
-          <span>{selected()}</span>
+          <span>{selectedPanelColor()}</span>
         </div>
-        <div class="absolute w-2 h-2 rounded-xl outline outline-[2px] outline-white border-zinc-500 border-[1px]
-          -translate-x-1/2 -translate-y-1/2" style={{
-          left: panelCursor()[0] + 'px',
-          top: panelCursor()[1] + 'px'
-        }}></div>
       </div>
 
       <div class="relative flex"
