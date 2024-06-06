@@ -22,6 +22,6 @@ declare global {
       w: number;
       h: number;
     },
-    props: StampedBucket<any>
+    props?: StampedBucket<any>
   }
 }

@@ -3,6 +3,7 @@ import { Show, onMount } from "solid-js";
 import { usePageDesign } from "./PageDesign";
 import Events from "./Events";
 import { bucket } from "../mgrui/lib/components/utils";
+import { DragArea } from "./DragLayer";
 
 export default function CanvasConfiguration() {
   const core = usePageDesign()
@@ -17,11 +18,13 @@ export default function CanvasConfiguration() {
 
   return (
     <div class="shrink-0 w-[30%] p-4">
-      <div class="flex flex-col gap-2">
-        <Show when={selected()}>
-          <Dynamic component={selected()?.attributes} componentProps={selected()?.props} />
-        </Show>
-      </div>
+      <DragArea>
+        <div class="flex flex-col gap-2">
+          <Show when={selected()}>
+            <Dynamic component={selected()?.attributes} componentProps={selected()?.props} />
+          </Show>
+        </div>
+      </DragArea>
     </div>
   )
 }

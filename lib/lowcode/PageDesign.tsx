@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Events from "./Events";
 import { CustomEventRegistryImpl, createDomEventRegistry } from "../mgrui/lib/components/event/EventRegistry";
 import { bucket, useCtx } from "../mgrui/lib/components/utils";
+import DragLayer from "./DragLayer";
 
 interface PageDesignContextDef extends CustomEventRegistry {
 }
@@ -60,6 +61,7 @@ export default function PageDesign() {
         <ComponentList />
         <Workspace />
         <CanvasConfiguration />
+        <DragLayer />
         {/* <Show when={ctx.selected()}>
           <div class="absolute" ref={el => ctx.draggingElemPositioning = el} style={{
             left: ctx.mouseDownAtRelative()?.[0] + "px",
