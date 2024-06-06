@@ -18,7 +18,7 @@ interface PageSpacingProps {
 function PageSpacing(props: PageSpacingProps) {
   return (
     <div class='flex items-center w-full h-full'>
-      <Show when={props.line}>
+      <Show when={props.line !== false}>
         <div class={names('border-box w-full h-[1px]')} style={{
           "border-top-width": props.lineWidth ? props.lineWidth + "px" : "1px",
           "border-style": props.lineStyle === "solid" ? "solid" : "dotted",

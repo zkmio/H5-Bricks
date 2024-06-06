@@ -19,12 +19,18 @@ export default function ComponentList() {
 export function ComponentCell(props: {
   entry: PageDesignComponent;
 }) {
-  const core = usePageDesign();
+  const core = usePageDesign()
+
+  const onClick = (evt: MouseEvent) => {
+    core.dispatch(new CustomEvent(Events.StartDraggingComponent, { detail: {
+      component: props.entry,
+      mousePosition: [evt.clientX, evt.clientY]
+    }}))
+  }
+
   return (
-    <div class="relative flex flex-col items-center justify-center aspect-square hover:bg-sky-200 active:bg-sky-100 rounded-md transition-all"
-      onClick={() => {
-        core.dispatch(new CustomEvent(Events.StartDraggingComponent, { detail: { component: props.entry }}));
-      }}>
+    <div class="relative flex flex-col items-center justify-center aspect-square hover:bg-sky-200 active:bg-sky-100 rounded-md transition-all select-none"
+      onClick={onClick}>
       <Dynamic component={props.entry.icon} size={30} />
       <Typography sx={{ p: 1 }}>{props.entry.label}</Typography>
     </div>
