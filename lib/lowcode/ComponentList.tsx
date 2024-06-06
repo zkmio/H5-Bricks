@@ -4,14 +4,11 @@ import PageSpacing from "./component/PageSpacing";
 import { usePageDesign } from "./PageDesign";
 import { Typography } from "@suid/material";
 import Events from "./Events";
-import { DragArea } from "./DragLayer";
 
 export default function ComponentList() {
   return (
     <div class="grid grid-cols-2 shrink-0 w-[300px] p-4 gap-4">
-      <DragArea>
-        <ComponentCell entry={PageSpacing} />
-      </DragArea>
+      <ComponentCell entry={PageSpacing} />
     </div>
   )
 }

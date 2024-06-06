@@ -57,19 +57,17 @@ export default function Workspace() {
 
   return (
     <div class="shrink-1 w-full bg-zinc-300 overflow-hidden">
-      <DragArea>
-        <div ref={el => screen = el} class={names("relative flex flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl drop-shadow-xl")}
-        style={{
-          "background-color": theme.palette.background.paper,
-        }}>
-          <div class="absolute top-0 -translate-y-full text-zinc-500">
-            <span>iPhone8 750x1334</span>
-          </div>
-          <PhoneStatusBar />
-          <AppTitleBar />
-          <WorkspaceCanvas />
+      <div ref={el => screen = el} class={names("relative flex flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl drop-shadow-xl")}
+      style={{
+        "background-color": theme.palette.background.paper,
+      }}>
+        <div class="absolute top-0 -translate-y-full text-zinc-500">
+          <span>iPhone8 750x1334</span>
         </div>
-      </DragArea>
+        <PhoneStatusBar />
+        <AppTitleBar />
+        <WorkspaceCanvas />
+      </div>
     </div>
   )
 }

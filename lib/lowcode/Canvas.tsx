@@ -2,6 +2,7 @@ import { useTheme } from "@suid/material";
 import { For } from "solid-js";
 import CanvasController from "./CanvasController";
 import ComponentRender from "./ComponentRender";
+import { DragArea } from "./DragLayer";
 
 export default function Canvas() {
   const theme = useTheme();
@@ -20,13 +21,12 @@ export default function Canvas() {
         "background-size": "20px 20px",
         "background-position": `${x.config().paddingX - 10}px ${x.config().paddingY - 10}px`
       }}>
-      {/* <Show when={pageDesign.selected() && mouseIn()}>
-        <Dynamic component={pageDesign.selected()?.element} />
-      </Show> */}
-      <For each={Array.from(x.components())}>{([id, instance]) => (
-          <ComponentRender instance={instance}
-            canvasPadding={[x.config().paddingX, x.config().paddingY]} />
-        )}</For>
+      <DragArea>
+        <For each={Array.from(x.components())}>{([id, instance]) => (
+            <ComponentRender instance={instance}
+              canvasPadding={[x.config().paddingX, x.config().paddingY]} />
+          )}</For>
+      </DragArea>
     </div>
   )
 }

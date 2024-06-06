@@ -65,7 +65,6 @@ export function DragArea(props: {
   children: JSX.Element
 }) {
   const onMouseEnter = () => {
-
   }
 
   const onMouseLeave = () => {
