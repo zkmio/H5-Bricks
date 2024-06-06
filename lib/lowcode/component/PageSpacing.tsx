@@ -3,12 +3,16 @@ import Option from '../common/Option';
 import MSelect from '../../mgrui/lib/components/mui/MSelect';
 import { useGlobalConfig } from '../../mgrui/lib/components/wrapper/GlobalConfig';
 import { Show } from 'solid-js';
-import { names } from '../../mgrui/lib/components/utils';
+import { asBucket, names } from '../../mgrui/lib/components/utils';
+import { TextInput } from '../../mgrui/lib/components/input/TextInput';
+import ColorInputHelper from '../common/ColorInputHelper';
+import NumberInput from '../../mgrui/lib/components/input/NumberInput';
 
 interface PageSpacingProps {
-  line?: boolean;
-  lineStyle?: "solid" | "dotted";
-  lineColor?: string;
+  line?: boolean
+  lineStyle?: "solid" | "dotted"
+  lineWidth?: number
+  lineColor?: string
 }
 
 function PageSpacing(props: PageSpacingProps) {
@@ -16,7 +20,7 @@ function PageSpacing(props: PageSpacingProps) {
     <div class='flex items-center w-full h-full'>
       <Show when={props.line}>
         <div class={names('border-box w-full h-[1px]')} style={{
-          "border-top-width": "1px",
+          "border-top-width": props.lineWidth ? props.lineWidth + "px" : "1px",
           "border-style": props.lineStyle === "solid" ? "solid" : "dotted",
           "border-color": props.lineColor || "black"
         }}></div>
@@ -33,7 +37,7 @@ function PageSpacingAttributes(props: {
   return (
     <>
       <Option label="pageDesign.component.pageSpacing.mode.label">
-        <MSelect items={{
+        <MSelect size='small' items={{
           empty: global.translate('pageDesign.component.pageSpacing.mode.empty'),
           line: global.translate('pageDesign.component.pageSpacing.mode.line'),
           dotted: global.translate('pageDesign.component.pageSpacing.mode.dotted'),
@@ -56,7 +60,15 @@ function PageSpacingAttributes(props: {
         }} />
       </Option>
       <Option label='pageDesign.component.pageSpacing.lineColor'>
-        1
+        <TextInput size='small' valueHelper={{
+          component: ColorInputHelper
+        }} bucket={asBucket(componentProps, ["lineColor"])} />
+      </Option>
+      <Option label='pageDesign.component.pageSpacing.lineWidth'>
+        <NumberInput size='small' unit='px'
+          minValue={0.5} maxValue={10}
+          maxDecimalLength={1}
+          bucket={asBucket(componentProps, ["lineWidth"])} />
       </Option>
     </>
   )

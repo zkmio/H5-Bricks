@@ -17,9 +17,11 @@ export default function CanvasConfiguration() {
 
   return (
     <div class="shrink-0 w-[30%] p-4">
-      <Show when={selected()}>
-        <Dynamic component={selected()?.attributes} componentProps={selected()?.props} />
-      </Show>
+      <div class="flex flex-col gap-2">
+        <Show when={selected()}>
+          <Dynamic component={selected()?.attributes} componentProps={selected()?.props} />
+        </Show>
+      </div>
     </div>
   )
 }

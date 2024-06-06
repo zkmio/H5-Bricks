@@ -18,7 +18,7 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 initI18n('en');
 
 render(() => 
-  <GlobalConfig notification i18n={(key) => t(key)}>
+  <GlobalConfig notification backdrop i18n={(key) => t(key)}>
     <PageDesign />
   </GlobalConfig>,
 root!);
