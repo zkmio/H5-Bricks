@@ -3,6 +3,7 @@ import { Show, onMount } from "solid-js";
 import { usePageDesign } from "./PageDesign";
 import Events from "./Events";
 import { bucket } from "../mgrui/lib/components/utils";
+import ColorPicker from "./common/ColorPicker";
 
 export default function CanvasConfiguration() {
   const core = usePageDesign()
@@ -20,6 +21,7 @@ export default function CanvasConfiguration() {
       <Show when={selected()}>
         <Dynamic component={selected()?.attributes} componentProps={selected()?.props} />
       </Show>
+      <ColorPicker />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 
 import { Dynamic } from "solid-js/web";
-import PageSpacing from "./components/PageSpacing";
+import PageSpacing from "./component/PageSpacing";
 import { usePageDesign } from "./PageDesign";
 import { Typography } from "@suid/material";
 import Events from "./Events";

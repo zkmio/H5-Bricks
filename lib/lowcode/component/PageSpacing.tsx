@@ -1,5 +1,5 @@
 import { TbSpacingVertical } from 'solid-icons/tb';
-import Option from './Option';
+import Option from '../common/Option';
 import MSelect from '../../mgrui/lib/components/mui/MSelect';
 import { useGlobalConfig } from '../../mgrui/lib/components/wrapper/GlobalConfig';
 import { Show } from 'solid-js';
