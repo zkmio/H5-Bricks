@@ -83,7 +83,7 @@ export default function ColorPicker() {
     }
 
     const padding = parseInt(window.getComputedStyle(container).padding.replace("px", ""));
-    barCtx.canvas.height = container.getBoundingClientRect().height - padding * 2
+    barCtx.canvas.height = container.getBoundingClientRect().height
   
     const barGradient = barCtx.createLinearGradient(0, 0, 0, barCtx.canvas.height)
     barGradient.addColorStop(0, 'violet')
@@ -126,11 +126,14 @@ export default function ColorPicker() {
         }}></div>
       </div>
 
-      <div class="relative">
+      <div class="relative flex">
         <canvas width={16} height={300}
           ref={el => barCanvasRef = el}
           onClick={onClickBar} />
-        <div class="absolute"></div>
+        <div class="absolute w-full h-2 rounded-sm outline outline-[2px] outline-white border-zinc-500 border-[1px]
+          -translate-y-1/2 left-0" style={{
+          top: barCursor()[1] + 'px'
+        }}></div>
       </div>
     </div>
   )
