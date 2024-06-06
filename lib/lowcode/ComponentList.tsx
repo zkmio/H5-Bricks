@@ -21,7 +21,7 @@ export function ComponentCell(props: {
 }) {
   const core = usePageDesign()
 
-  const onClick = (evt: MouseEvent) => {
+  const onMouseDown = (evt: MouseEvent) => {
     core.dispatch(new CustomEvent(Events.StartDraggingComponent, { detail: {
       component: props.entry,
       mousePosition: [evt.clientX, evt.clientY]
@@ -30,7 +30,7 @@ export function ComponentCell(props: {
 
   return (
     <div class="relative flex flex-col items-center justify-center aspect-square hover:bg-sky-200 active:bg-sky-100 rounded-md transition-all select-none"
-      onClick={onClick}>
+      onMouseDown={onMouseDown}>
       <Dynamic component={props.entry.icon} size={30} />
       <Typography sx={{ p: 1 }}>{props.entry.label}</Typography>
     </div>
