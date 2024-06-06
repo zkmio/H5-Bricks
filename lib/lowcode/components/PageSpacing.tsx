@@ -1,7 +1,9 @@
 import { TbSpacingVertical } from 'solid-icons/tb';
 import Option from './Option';
-import { PageDesignComponent } from '../PageDesign';
 import MSelect from '../../mgrui/lib/components/mui/MSelect';
+import { useGlobalConfig } from '../../mgrui/lib/components/wrapper/GlobalConfig';
+import { Show } from 'solid-js';
+import { names } from '../../mgrui/lib/components/utils';
 
 interface PageSpacingProps {
   line?: boolean;
@@ -13,19 +15,29 @@ interface PageSpacingProps {
 
 function PageSpacing(props: PageSpacingProps) {
   return (
-    <br class='w-full h-4' />
+    <div class='flex items-center w-full h-full'>
+      <Show when={props.line}>
+        <div class={names('w-full h-[1px]')} style={{
+          "background-color": props.lineColor || "black"
+        }}></div>
+      </Show>
+    </div>
   )
 }
 
 function PageSpacingAttributes(props: {
-  bucket: StampedBucket<PageSpacingProps>
+  componentProps: StampedBucket<PageSpacingProps>
 }) {
+  const global = useGlobalConfig()
+  const { componentProps } = props
   return (
     <>
-      <Option label="pageDesign.component.pageSpacing.mode">
+      <Option label="pageDesign.component.pageSpacing.mode.label">
         <MSelect items={{
-          empty: "Empty",
-          line: "Line"
+          empty: global.translate('pageDesign.component.pageSpacing.mode.empty'),
+          line: global.translate('pageDesign.component.pageSpacing.mode.line')
+        }} onSelectItem={mode => {
+          componentProps(x => x.line = mode === "line" ? true : false)
         }} />
       </Option>
     </>

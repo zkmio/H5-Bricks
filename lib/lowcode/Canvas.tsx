@@ -1,5 +1,5 @@
 import { useTheme } from "@suid/material";
-import { For } from "solid-js";
+import { For, createMemo } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import CanvasController from "./CanvasController";
 
@@ -8,7 +8,7 @@ export default function Canvas() {
   const x = new CanvasController()
 
   return (
-    <div class="relative w-full grow"
+    <div class="relative w-full grow rounded-2xl"
       ref={el => x.container = el}
       onMouseEnter={x.onMouseEnter.bind(x)}
       onMouseLeave={x.onMouseLeave.bind(x)}
@@ -23,16 +23,26 @@ export default function Canvas() {
       {/* <Show when={pageDesign.selected() && mouseIn()}>
         <Dynamic component={pageDesign.selected()?.element} />
       </Show> */}
-      <For each={Array.from(x.components())}>{([id, instance]) => (
-        <div class="absolute outline outline-1 outline-zinc-500" style={{
-          left: instance.box.x * 20 + x.config().paddingX + "px",
-          top: instance.box.y * 20 + x.config().paddingY + "px",
-          width: instance.box.w * 20 + "px",
-          height: instance.box.h * 20 + "px",
-        }} onClick={x.onSelectComponent.bind(x)}>
-          <Dynamic component={instance.element} />
-        </div>
-      )}</For>
+      <For each={Array.from(x.components())}>{([id, instance]) => {
+        const dynamic = createMemo(() => {
+          const props = instance.props()
+          return (
+            <Dynamic component={instance.element} {...props} />
+          )
+        })
+        return (
+          <div class="component-positioner absolute outline outline-1 outline-zinc-500" style={{
+            left: instance.box.x * 20 + x.config().paddingX + "px",
+            top: instance.box.y * 20 + x.config().paddingY + "px",
+            width: instance.box.w * 20 + "px",
+            height: instance.box.h * 20 + "px",
+          }} onClick={() => x.onSelectComponent(instance)}>
+            <div class="component-wrapper relative w-full h-full">
+              {dynamic()}
+            </div>
+          </div>
+        )
+      }}</For>
     </div>
   )
 }

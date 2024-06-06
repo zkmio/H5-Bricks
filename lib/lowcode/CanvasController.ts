@@ -1,21 +1,11 @@
 import { onMount, onCleanup } from "solid-js";
-import { PageDesignComponent, usePageDesign } from "./PageDesign";
-import PageDesignEvents from "./PageDesignEvents";
+import { usePageDesign } from "./PageDesign";
+import Events from "./Events";
 import { bucket, stampedBucket } from "../mgrui/lib/components/utils";
-
-interface ComponentInstance extends PageDesignComponent {
-  box: {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-  },
-  props: StampedBucket<any>
-}
 
 export default class CanvasController {
 
-  readonly pageDesign = usePageDesign()
+  readonly core = usePageDesign()
   readonly mouseIn = bucket(false);
   private idCounter = 0;
   container: HTMLDivElement;
@@ -27,10 +17,9 @@ export default class CanvasController {
   readonly components = stampedBucket(new Map<number, ComponentInstance>());
 
   constructor() {
-    
 
     onMount(() => {
-      this.pageDesign.on(PageDesignEvents.AddComponentToWorkspace, evt => {
+      this.core.on(Events.AddComponentToWorkspace, evt => {
         const id = this.idCounter++;
         const component = {...evt.detail.component} as ComponentInstance;
         const {w, h} = component.elementInitSize;
@@ -44,13 +33,12 @@ export default class CanvasController {
           };
           component.props = stampedBucket({})
           this.components(data => data.set(id, component));
-          console.log(component)
         } else {
           console.warn("no space to place component")
         }
       });
 
-      const resizeObserver = new ResizeObserver(this.resize)
+      const resizeObserver = new ResizeObserver(this.resize.bind(this))
       resizeObserver.observe(this.container);
       onCleanup(() => {
         resizeObserver.disconnect();
@@ -119,7 +107,7 @@ export default class CanvasController {
     return;
   }
 
-  onSelectComponent() {
-    
+  onSelectComponent(instance: ComponentInstance) {
+    this.core.dispatch(new CustomEvent(Events.SelectComponentInstance, { detail: instance }))
   }
 }

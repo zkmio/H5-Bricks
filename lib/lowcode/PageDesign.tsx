@@ -1,22 +1,11 @@
-import { ValidComponent, createContext, onMount } from "solid-js";
-import ComponentConfiguration from "./ComponentConfiguration";
+import { createContext, onMount } from "solid-js";
+import CanvasConfiguration from "./CanvasConfiguration";
 import ComponentList from "./ComponentList";
 import Workspace from "./Workspace";
 import { v4 as uuidv4 } from 'uuid';
-import PageDesignEvents from "./PageDesignEvents";
+import Events from "./Events";
 import { CustomEventRegistryImpl, createDomEventRegistry } from "../mgrui/lib/components/event/EventRegistry";
 import { bucket, useCtx } from "../mgrui/lib/components/utils";
-
-export interface PageDesignComponent {
-  icon: ValidComponent
-  label: string
-  element: ValidComponent
-  elementInitSize: {
-    w: number
-    h: number
-  },
-  attributes: ValidComponent
-}
 
 interface PageDesignContextDef extends CustomEventRegistry {
 }
@@ -32,7 +21,7 @@ class PageDesignContextImpl extends CustomEventRegistryImpl implements PageDesig
   constructor() {
     super();
     onMount(() => {
-      this.on(PageDesignEvents.StartDraggingComponent, evt => {
+      this.on(Events.StartDraggingComponent, evt => {
         // this.selected(evt.detail.component);
         this.mouseDownAt(evt.detail.mouse);
         this.mouseDownAtRelative(evt.detail.offset);
@@ -70,7 +59,7 @@ export default function PageDesign() {
       <PageDesignContext.Provider value={ctx}>
         <ComponentList />
         <Workspace />
-        <ComponentConfiguration />
+        <CanvasConfiguration />
         {/* <Show when={ctx.selected()}>
           <div class="absolute" ref={el => ctx.draggingElemPositioning = el} style={{
             left: ctx.mouseDownAtRelative()?.[0] + "px",

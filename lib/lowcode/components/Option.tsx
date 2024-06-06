@@ -1,15 +1,14 @@
 import { Typography } from "@suid/material";
 import { JSX } from "solid-js";
-import { useGlobalConfig } from "../../mgrui/lib/components/wrapper/GlobalConfig";
+import T from "../../mgrui/lib/components/T";
 
 export default function Option(props: {
   label: string;
   children: JSX.Element;
 }) {
-  const global = useGlobalConfig();
   return (
     <div class="flex items-center gap-2">
-      <Typography>{global.translateInternal(props.label)}:</Typography>
+      <Typography><T>{props.label}</T>:</Typography>
       {props.children}
     </div>
   )

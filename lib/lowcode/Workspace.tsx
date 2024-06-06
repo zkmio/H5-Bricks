@@ -3,7 +3,7 @@ import { FaSolidBatteryHalf, FaSolidChevronLeft, FaSolidSignal, FaSolidWifi } fr
 import { RiDesignFocusLine } from "solid-icons/ri";
 import { FiMoreHorizontal } from 'solid-icons/fi';
 import { onCleanup, onMount } from "solid-js";
-import WorkspaceCanvas from "./WorkspaceCanvas";
+import WorkspaceCanvas from "./Canvas";
 import { names } from "../mgrui/lib/components/utils";
 
 export default function Workspace() {

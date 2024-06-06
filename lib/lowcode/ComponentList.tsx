@@ -1,9 +1,9 @@
 
 import { Dynamic } from "solid-js/web";
 import PageSpacing from "./components/PageSpacing";
-import { PageDesignComponent, usePageDesign } from "./PageDesign";
+import { usePageDesign } from "./PageDesign";
 import { Typography } from "@suid/material";
-import PageDesignEvents from "./PageDesignEvents";
+import Events from "./Events";
 
 export default function ComponentList() {
   return (
@@ -16,11 +16,11 @@ export default function ComponentList() {
 export function ComponentCell(props: {
   entry: PageDesignComponent;
 }) {
-  const pageDesign = usePageDesign();
+  const core = usePageDesign();
   return (
     <div class="relative flex flex-col items-center justify-center aspect-square hover:bg-sky-200 active:bg-sky-100 rounded-md transition-all"
       onClick={() => {
-        pageDesign.dispatch(new CustomEvent(PageDesignEvents.AddComponentToWorkspace, { detail: { component: props.entry }}));
+        core.dispatch(new CustomEvent(Events.AddComponentToWorkspace, { detail: { component: props.entry }}));
       }}>
       <Dynamic component={props.entry.icon} size={30} />
       <Typography sx={{ p: 1 }}>{props.entry.label}</Typography>
