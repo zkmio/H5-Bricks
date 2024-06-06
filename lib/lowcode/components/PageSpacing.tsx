@@ -9,16 +9,16 @@ interface PageSpacingProps {
   line?: boolean;
   lineStyle?: "solid" | "dotted";
   lineColor?: string;
-  height?: number;
-  pagePadding?: number;
 }
 
 function PageSpacing(props: PageSpacingProps) {
   return (
     <div class='flex items-center w-full h-full'>
       <Show when={props.line}>
-        <div class={names('w-full h-[1px]')} style={{
-          "background-color": props.lineColor || "black"
+        <div class={names('border-box w-full h-[1px]')} style={{
+          "border-top-width": "1px",
+          "border-style": props.lineStyle === "solid" ? "solid" : "dotted",
+          "border-color": props.lineColor || "black"
         }}></div>
       </Show>
     </div>
@@ -35,10 +35,28 @@ function PageSpacingAttributes(props: {
       <Option label="pageDesign.component.pageSpacing.mode.label">
         <MSelect items={{
           empty: global.translate('pageDesign.component.pageSpacing.mode.empty'),
-          line: global.translate('pageDesign.component.pageSpacing.mode.line')
+          line: global.translate('pageDesign.component.pageSpacing.mode.line'),
+          dotted: global.translate('pageDesign.component.pageSpacing.mode.dotted'),
         }} onSelectItem={mode => {
-          componentProps(x => x.line = mode === "line" ? true : false)
+          componentProps(x => {
+            switch (mode) {
+              case 'empty':
+                x.line = false
+                break
+              case 'line':
+                x.line = true
+                x.lineStyle = "solid"
+                break
+              case 'dotted':
+                x.line = true
+                x.lineStyle = "dotted"
+                break
+            }
+          })
         }} />
+      </Option>
+      <Option label='pageDesign.component.pageSpacing.lineColor'>
+        1
       </Option>
     </>
   )

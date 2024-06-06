@@ -6,7 +6,8 @@ export default ({
         mode: {
           label: "内容",
           empty: "无",
-          line: "线条"
+          line: "直线",
+          dotted: "虚线"
         }
       }
     }
