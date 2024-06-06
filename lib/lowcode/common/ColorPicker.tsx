@@ -1,5 +1,6 @@
 import { createEffect, onMount } from "solid-js"
 import { bucket } from "../../mgrui/lib/components/utils"
+import { DomEventRegistry, createDomEventRegistry } from "../../mgrui/lib/components/event/EventRegistry"
 
 export default function ColorPicker() {
   let container: HTMLDivElement
@@ -10,7 +11,9 @@ export default function ColorPicker() {
   const selectedBarColor = bucket<string>("")
   const selected = bucket<string>("")
   const panelCursor = bucket<Pos>([0, 0])
+  const draggingPanel = bucket(false)
   const barCursor = bucket<Pos>([0, 0])
+  const draggingBar = bucket(false)
 
   const selectCursorFromPanel = (pos: Pos) => {
     const ctx = panelCanvasRef.getContext('2d')
@@ -18,7 +21,10 @@ export default function ColorPicker() {
       return
     }
 
-    const [x, y] = pos
+    let [x, y] = pos
+    x = Math.min(ctx.canvas.width, Math.max(x, 0))
+    y = Math.min(ctx.canvas.height, Math.max(y, 0))
+
     const pixel = ctx.getImageData(x, y, 1, 1).data
     const rgb = `rgb(${pixel[0]},${pixel[1]},${pixel[2]})`
     selected(rgb)
@@ -32,7 +38,10 @@ export default function ColorPicker() {
       return
     }
 
-    const [x, y] = pos
+    let [x, y] = pos
+    x = Math.min(ctx.canvas.width, Math.max(x, 0))
+    y = Math.min(ctx.canvas.height, Math.max(y, 0))
+
     const pixel = ctx.getImageData(x, y, 1, 1).data
     const rgb = `rgb(${pixel[0]},${pixel[1]},${pixel[2]})`
     selectedBarColor(rgb)
@@ -40,19 +49,37 @@ export default function ColorPicker() {
     selectCursorFromPanel(panelCursor())
   }
 
-  const onClickPanel = (evt: MouseEvent) => {
+  const onMouseDownPanel = (evt: MouseEvent) => {
     let { clientX: x, clientY: y } = evt
     x -= panelCanvasRef.getBoundingClientRect().left
     y -= panelCanvasRef.getBoundingClientRect().top
     selectCursorFromPanel([x, y])
+    draggingPanel(true)
   }
 
-  const onClickBar = (evt: MouseEvent) => {
+  const onMouseMovePanel = (evt: MouseEvent) => {
+    if (!draggingPanel()) {
+      return
+    }
+
+    onMouseDownPanel(evt)
+  }
+
+  const onMouseDownBar = (evt: MouseEvent) => {
     let { clientX: x, clientY: y } = evt
     x -= barCanvasRef.getBoundingClientRect().left
     y -= barCanvasRef.getBoundingClientRect().top
 
     selectCursorFromBar([x, y])
+    draggingBar(true)
+  }
+
+  const onMouseMoveBar = (evt: MouseEvent) => {
+    if (!draggingBar()) {
+      return
+    }
+    
+    onMouseDownBar(evt)
   }
 
   const drawPanelCanvas = () => {
@@ -82,7 +109,7 @@ export default function ColorPicker() {
       return
     }
 
-    const padding = parseInt(window.getComputedStyle(container).padding.replace("px", ""));
+    // const padding = parseInt(window.getComputedStyle(container).padding.replace("px", ""));
     barCtx.canvas.height = container.getBoundingClientRect().height
   
     const barGradient = barCtx.createLinearGradient(0, 0, 0, barCtx.canvas.height)
@@ -103,6 +130,19 @@ export default function ColorPicker() {
 
     drawPanelCanvas()
     selectCursorFromPanel([0, 0])
+
+    const domEventRegistry = createDomEventRegistry()
+    domEventRegistry.on(window, "mousemove", (evt) => {
+      if (draggingBar()) {
+        onMouseMoveBar(evt)
+      } else if (draggingPanel()) {
+        onMouseMovePanel(evt)
+      }
+    })
+    domEventRegistry.on(window, "mouseup", () => {
+      draggingBar(false)
+      draggingPanel(false)
+    })
   })
 
   createEffect(drawPanelCanvas)
@@ -112,7 +152,7 @@ export default function ColorPicker() {
       <div class="relative flex flex-col gap-2">
         <canvas width={300} height={300}
           ref={el => panelCanvasRef = el}
-          onClick={onClickPanel} />
+          onMouseDown={onMouseDownPanel} />
         <div class="w-full h-full text-center p-1" style={{
           color: isLightColor() ? "black" : "white",
           "background-color": selected()
@@ -126,12 +166,12 @@ export default function ColorPicker() {
         }}></div>
       </div>
 
-      <div class="relative flex">
+      <div class="relative flex"
+        onMouseDown={onMouseDownBar}>
         <canvas width={16} height={300}
-          ref={el => barCanvasRef = el}
-          onClick={onClickBar} />
+          ref={el => barCanvasRef = el} />
         <div class="absolute w-full h-2 rounded-sm outline outline-[2px] outline-white border-zinc-500 border-[1px]
-          -translate-y-1/2 left-0" style={{
+          left-0" style={{
           top: barCursor()[1] + 'px'
         }}></div>
       </div>
